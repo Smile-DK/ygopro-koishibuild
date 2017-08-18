@@ -661,7 +661,13 @@ bool SingleMode::SinglePlayAnalyze(char* msg, unsigned int len) {
 					if(val) {
 						ClientCard* ccard = new ClientCard;
 						mainGame->dField.AddCard(ccard, p, LOCATION_MZONE, seq);
-						ccard->position = BufferIO::ReadInt8(pbuf);
+						//modded
+						int pos = BufferIO::ReadInt8(pbuf);
+						if (pos & POS_FACEDOWN_ATTACK)
+							pos = ((pos - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+						if (pos & POS_FACEDOWN_DEFENSE)
+							pos = ((pos - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
+						ccard->position = pos;
 						val = BufferIO::ReadInt8(pbuf);
 						if(val) {
 							for(int xyz = 0; xyz < val; ++xyz) {
@@ -680,7 +686,13 @@ bool SingleMode::SinglePlayAnalyze(char* msg, unsigned int len) {
 					if(val) {
 						ClientCard* ccard = new ClientCard;
 						mainGame->dField.AddCard(ccard, p, LOCATION_SZONE, seq);
-						ccard->position = BufferIO::ReadInt8(pbuf);
+						//modded
+						int pos = BufferIO::ReadInt8(pbuf);
+						if (pos & POS_FACEDOWN_ATTACK)
+							pos = ((pos - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+						if (pos & POS_FACEDOWN_DEFENSE)
+							pos = ((pos - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
+						ccard->position = pos;
 					}
 				}
 				val = BufferIO::ReadInt8(pbuf);

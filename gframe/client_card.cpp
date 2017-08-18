@@ -72,6 +72,11 @@ void ClientCard::UpdateInfo(char* buf) {
 	if(flag & QUERY_POSITION) {
 		pdata = BufferIO::ReadInt32(buf);
 		position = (pdata >> 24) & 0xff;
+		//modded
+		if (position & POS_FACEDOWN_ATTACK)
+			position = ((position - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+		if (position & POS_FACEDOWN_DEFENSE)
+			position = ((position - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
 	}
 	if(flag & QUERY_ALIAS)
 		alias = BufferIO::ReadInt32(buf);
@@ -160,7 +165,8 @@ void ClientCard::UpdateInfo(char* buf) {
 	if(flag & QUERY_IS_DISABLED)
 		is_disabled = BufferIO::ReadInt32(buf);
 	if(flag & QUERY_IS_PUBLIC)
-		is_public = BufferIO::ReadInt32(buf);
+		//modded
+		is_public = (BufferIO::ReadInt32(buf); & 0x1)
 	if(flag & QUERY_LSCALE) {
 		lscale = BufferIO::ReadInt32(buf);
 		myswprintf(lscstring, L"%d", lscale);

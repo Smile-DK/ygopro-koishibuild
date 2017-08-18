@@ -101,7 +101,8 @@ void ClientField::Initial(int player, int deckc, int extrac) {
 		pcard->controler = player;
 		pcard->location = 0x1;
 		pcard->sequence = i;
-		pcard->position = POS_FACEDOWN_DEFENSE;
+		//modded
+		pcard->position = POS_FACEUP_DEFENSE;
 		GetCardLocation(pcard, &pcard->curPos, &pcard->curRot, true);
 	}
 	for(int i = 0; i < extrac; ++i) {
@@ -111,7 +112,8 @@ void ClientField::Initial(int player, int deckc, int extrac) {
 		pcard->controler = player;
 		pcard->location = 0x40;
 		pcard->sequence = i;
-		pcard->position = POS_FACEDOWN_DEFENSE;
+		//modded
+		pcard->position = POS_FACEUP_DEFENSE;
 		GetCardLocation(pcard, &pcard->curPos, &pcard->curRot, true);
 	}
 }

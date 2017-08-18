@@ -1864,7 +1864,8 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 			int m = 0;
 			for (auto cit = mainGame->dField.deck[player].begin(); cit != mainGame->dField.deck[player].end(); ) {
 				if ((*cit)->type & (TYPE_FUSION | TYPE_SYNCHRO | TYPE_XYZ | TYPE_LINK)) {
-					(*cit)->position = POS_FACEDOWN;
+				//modded
+					(*cit)->position = POS_FACEUP;
 					mainGame->dField.AddCard(*cit, player, LOCATION_EXTRA, 0);
 					cit = mainGame->dField.deck[player].erase(cit);
 				} else {
@@ -1884,7 +1885,8 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 			for (auto cit = mainGame->dField.deck[player].begin(); cit != mainGame->dField.deck[player].end(); ) {
 				ClientCard* pcard = *cit;
 				if (pcard->type & (TYPE_FUSION | TYPE_SYNCHRO | TYPE_XYZ | TYPE_LINK)) {
-					pcard->position = POS_FACEDOWN;
+				//modded
+					pcard->position = POS_FACEUP;
 					mainGame->dField.AddCard(pcard, player, LOCATION_EXTRA, 0);
 					cit = mainGame->dField.deck[player].erase(cit);
 				} else {
@@ -2061,6 +2063,11 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 		int cl = BufferIO::ReadUInt8(pbuf);
 		int cs = BufferIO::ReadInt8(pbuf);
 		int cp = BufferIO::ReadInt8(pbuf);
+		//modded
+		if (cp & POS_FACEDOWN_ATTACK)
+			cp = ((cp - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+		if (cp & POS_FACEDOWN_DEFENSE)
+			cp = ((cp - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
 		int reason = BufferIO::ReadInt32(pbuf);
 		if(!mainGame->dInfo.isReplay || !mainGame->dInfo.isReplaySkiping) {
 			if(cl & LOCATION_REMOVED && pl != cl)
@@ -2267,6 +2274,11 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 		int cs = BufferIO::ReadInt8(pbuf);
 		int pp = BufferIO::ReadInt8(pbuf);
 		int cp = BufferIO::ReadInt8(pbuf);
+		//modded
+		if (cp & POS_FACEDOWN_ATTACK)
+			cp = ((cp - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+		if (cp & POS_FACEDOWN_DEFENSE)
+			cp = ((cp - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
 		ClientCard* pcard = mainGame->dField.GetCard(cc, cl, cs);
 		if((pp & POS_FACEUP) && (cp & POS_FACEDOWN)) {
 			pcard->counters.clear();
@@ -2391,6 +2403,11 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 		int cl = BufferIO::ReadInt8(pbuf);
 		int cs = BufferIO::ReadInt8(pbuf);
 		int cp = BufferIO::ReadInt8(pbuf);
+		//modded
+		if (cp & POS_FACEDOWN_ATTACK)
+			cp = ((cp - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+		if (cp & POS_FACEDOWN_DEFENSE)
+			cp = ((cp - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
 		ClientCard* pcard = mainGame->dField.GetCard(cc, cl, cs);
 		pcard->SetCode(code);
 		pcard->position = cp;
@@ -3335,7 +3352,13 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 				if(val) {
 					ClientCard* ccard = new ClientCard;
 					mainGame->dField.AddCard(ccard, p, LOCATION_MZONE, seq);
-					ccard->position = BufferIO::ReadInt8(pbuf);
+					//modded
+					int pos = BufferIO::ReadInt8(pbuf);
+					if (pos & POS_FACEDOWN_ATTACK)
+						pos = ((pos - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+					if (pos & POS_FACEDOWN_DEFENSE)
+						pos = ((pos - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
+					ccard->position = pos;
 					mainGame->dField.GetCardLocation(ccard, &ccard->curPos, &ccard->curRot, true);
 					val = BufferIO::ReadInt8(pbuf);
 					if(val) {
@@ -3357,7 +3380,13 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 				if(val) {
 					ClientCard* ccard = new ClientCard;
 					mainGame->dField.AddCard(ccard, p, LOCATION_SZONE, seq);
-					ccard->position = BufferIO::ReadInt8(pbuf);
+					//modded
+					int pos = BufferIO::ReadInt8(pbuf);
+					if (pos & POS_FACEDOWN_ATTACK)
+						pos = ((pos - POS_FACEDOWN_ATTACK) | POS_FACEUP_ATTACK);
+					if (pos & POS_FACEDOWN_DEFENSE)
+						pos = ((pos - POS_FACEDOWN_DEFENSE) | POS_FACEUP_DEFENSE);
+					ccard->position = pos;
 					mainGame->dField.GetCardLocation(ccard, &ccard->curPos, &ccard->curRot, true);
 				}
 			}
