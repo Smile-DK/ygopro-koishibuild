@@ -164,9 +164,13 @@ void ClientCard::UpdateInfo(char* buf) {
 		owner = BufferIO::ReadInt32(buf);
 	if(flag & QUERY_IS_DISABLED)
 		is_disabled = BufferIO::ReadInt32(buf);
-	if(flag & QUERY_IS_PUBLIC)
-		//modded
-		is_public = (BufferIO::ReadInt32(buf) & 0x1);
+	//modded
+	if(flag & QUERY_IS_PUBLIC) { 
+		int ret = BufferIO::ReadInt32(buf);
+		if (!ret)
+			ret = 1;
+		is_public = ret;
+	}
 	if(flag & QUERY_LSCALE) {
 		lscale = BufferIO::ReadInt32(buf);
 		myswprintf(lscstring, L"%d", lscale);
